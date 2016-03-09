@@ -42,10 +42,10 @@ public class MissionDataCode {
 				extraCents = Integer.parseInt(valueAfterRounded.substring(valueAfterRounded.length() - 1));
 			}
 			boolean flag = false;
-			int i = 0;
+			int count = 0;
 			for (String users : object.keySet()) {
 				if (extraCents > 0) {
-					if (i == extraCents) {
+					if (count == extraCents) {
 						flag = true;
 					}
 					if (flag) {
@@ -57,9 +57,9 @@ public class MissionDataCode {
 						String str = "$" + formattingStyle.format(amount);
 						outputString.put(users, str);
 					}
-					i++;
+					count++;
 				} else if (lostCents > 0) {
-					if (i == lostCents) {
+					if (count == lostCents) {
 						flag = true;
 					}
 					if (flag) {
@@ -71,7 +71,7 @@ public class MissionDataCode {
 						String str = "$" + formattingStyle.format(amount);
 						outputString.put(users, str);
 					}
-					i++;
+					count++;
 				}
 			}
 		}
