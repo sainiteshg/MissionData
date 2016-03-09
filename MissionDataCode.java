@@ -76,7 +76,7 @@ public class MissionDataCode {
 			}
 		}
 
-		// Logic if formating amount is not decimal
+		// Logic if formated amount is not decimal
 		else {
 			for (String users : object.keySet()) {
 				double amount = object.get(users) - shareAmount;
