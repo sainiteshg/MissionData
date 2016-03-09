@@ -12,7 +12,7 @@ In another case user1:25 ,user2:9,user3:9 the total is 43 43/3=14.3333 rounded v
 
 Hence I used some simple math to find number of cents lost and gained and I adjusted this using flag to keep count of number of cents lost or added .I looked into splitwise it showed difference in cents randomly so therefore I used set object(no order) to adjust this cents to the values.
 
-I used HashMap  <String,Double> as input and I returned  HashMap  <String,String> as output in order to concatenate $ sign before the values.
+I used HashMap  String,Double  Key-Value pairs as input and I returned  HashMap  String,String   Key-Value pairs  as output in order to concatenate $ sign before the values.
 
 
 Please see the test file 
