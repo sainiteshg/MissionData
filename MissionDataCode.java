@@ -32,7 +32,7 @@ public class MissionDataCode {
 		// Logic if the roundoff amount is decimal
 		if (shareAmount - (int) shareAmount != 0) { // decimal value present
 			double valueAfterRounding = Double.parseDouble(formattingStyle.format(roundingSharedAmount * numberOfUsers));
-			String valueAfterRounded = formattingStyle.format(valueAfterRounding);
+			String valueAfterRounded = Double.toString(valueAfterRounding);
 			// After rounding to 2 decimal places there is a chance of missing
 			// or gaining few extra cents
 			// I wrote the logic to make sure there is no loss or gain in cents
