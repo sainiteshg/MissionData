@@ -23,68 +23,103 @@ public class MissionDataCode {
 			numberOfUsers++;
 		}
 
-		// Amount to be shared
-		double shareAmount = totalAmount / numberOfUsers;
-		
-		// Formatting sytle as per requirement
 		DecimalFormat formattingStyle = new DecimalFormat("0.00");
-		double roundingSharedAmount = Double.parseDouble(formattingStyle.format(shareAmount));
-		// Logic if the roundoff amount is decimal
-		if (shareAmount - (int) shareAmount != 0) { // decimal value present
-			double valueAfterRounding = Double.parseDouble(formattingStyle.format(roundingSharedAmount * numberOfUsers));
-			String valueAfterRounded = Double.toString(valueAfterRounding);
-			// After rounding to 2 decimal places there is a chance of missing
-			// or gaining few extra cents
-			// I wrote the logic to make sure there is no loss or gain in cents
-			if (totalAmount > valueAfterRounding) {
-				lostCents = 10 - Integer.parseInt(valueAfterRounded.substring(valueAfterRounded.length() - 1));
-			} else {
-				extraCents = Integer.parseInt(valueAfterRounded.substring(valueAfterRounded.length() - 1));
-			}
-			boolean flag = false;
-			int count = 0;
-			for (String users : object.keySet()) {
-				if (extraCents > 0) {
-					if (count == extraCents) {
-						flag = true;
-					}
-					if (flag) {
-						double amount = object.get(users) - roundingSharedAmount;
-						String str = "$" + formattingStyle.format(amount);
-						outputString.put(users, str);
-					} else {
-						double amount = object.get(users) - (roundingSharedAmount - 0.01);
-						String str = "$" + formattingStyle.format(amount);
-						outputString.put(users, str);
-					}
-					count++;
-				} else if (lostCents > 0) {
-					if (count == lostCents) {
-						flag = true;
-					}
-					if (flag) {
-						double amount = object.get(users) - roundingSharedAmount;
-						String str = "$" + formattingStyle.format(amount);
-						outputString.put(users, str);
-					} else {
-						double amount = object.get(users) - (roundingSharedAmount + 0.01);
-						String str = "$" + formattingStyle.format(amount);
-						outputString.put(users, str);
-					}
-					count++;
+		double totalAmountInCents = Double.parseDouble(formattingStyle.format(totalAmount)) * 100;
+
+		if (totalAmountInCents < numberOfUsers) {
+			totalInCentsLessThanUsers(object, outputString, formattingStyle, totalAmountInCents);
+		} else {
+			// Amount to be shared
+			double shareAmount = totalAmount / numberOfUsers;
+
+			// Formatting sytle as per requirement
+
+			double roundingSharedAmount = Double.parseDouble(formattingStyle.format(shareAmount));
+			// Logic if the roundoff amount is decimal
+			if (shareAmount - (int) shareAmount != 0) { // decimal value present
+				double valueAfterRounding = Double.parseDouble(formattingStyle.format(roundingSharedAmount
+						* numberOfUsers));
+				String valueAfterRounded = Double.toString(valueAfterRounding);
+				// After rounding to 2 decimal places there is a chance of
+				// missing
+				// or gaining few extra cents
+				// I wrote the logic to make sure there is no loss or gain in
+				// cents
+				if (totalAmount > valueAfterRounding) {
+					lostCents = 10 - Integer.parseInt(valueAfterRounded.substring(valueAfterRounded.length() - 1));
+				} else if (totalAmount < valueAfterRounding) {
+					extraCents = Integer.parseInt(valueAfterRounded.substring(valueAfterRounded.length() - 1));
+				} else {
+					NoChangeInAmounts(object, outputString, formattingStyle, shareAmount);
 				}
+				boolean flag = false;
+				int count = 0;
+				for (String users : object.keySet()) {
+					if (extraCents > 0) {
+						if (count == extraCents) {
+							flag = true;
+						}
+						if (flag) {
+							double amount = object.get(users) - roundingSharedAmount;
+							String str = "$" + formattingStyle.format(amount);
+							outputString.put(users, str);
+						} else {
+							double amount = object.get(users) - (roundingSharedAmount - 0.01);
+							String str = "$" + formattingStyle.format(amount);
+							outputString.put(users, str);
+						}
+						count++;
+					} else if (lostCents > 0) {
+						if (count == lostCents) {
+							flag = true;
+						}
+						if (flag) {
+							double amount = object.get(users) - roundingSharedAmount;
+							String str = "$" + formattingStyle.format(amount);
+							outputString.put(users, str);
+						} else {
+							double amount = object.get(users) - (roundingSharedAmount + 0.01);
+							String str = "$" + formattingStyle.format(amount);
+							outputString.put(users, str);
+						}
+						count++;
+					}
+				}
+			}
+
+			// Logic if formated amount is not decimal
+			else {
+				NoChangeInAmounts(object, outputString, formattingStyle, shareAmount);
 			}
 		}
 
-		// Logic if formated amount is not decimal
-		else {
-			for (String users : object.keySet()) {
-				double amount = object.get(users) - shareAmount;
+		return outputString;
+	}
+
+	private void totalInCentsLessThanUsers(HashMap<String, Double> object, HashMap<String, String> outputString,
+			DecimalFormat formattingStyle, double totalAmountInCents) {
+		int count = 0;
+		for (String users : object.keySet()) {
+			if (count != (int) totalAmountInCents) {
+				double amount = object.get(users) - 0.01;
+				String str = "$" + formattingStyle.format(amount);
+				outputString.put(users, str);
+				count++;
+			} else {
+				double amount = object.get(users);
 				String str = "$" + formattingStyle.format(amount);
 				outputString.put(users, str);
 			}
 		}
+	}
 
+	private HashMap<String, String> NoChangeInAmounts(HashMap<String, Double> object,
+			HashMap<String, String> outputString, DecimalFormat formattingStyle, double shareAmount) {
+		for (String users : object.keySet()) {
+			double amount = object.get(users) - shareAmount;
+			String str = "$" + formattingStyle.format(amount);
+			outputString.put(users, str);
+		}
 		return outputString;
 	}
 }
