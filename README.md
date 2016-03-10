@@ -19,10 +19,8 @@ I used HashMap  String,Double  Key-Value pairs as input and I returned  HashMap 
 
 
 Please see the test file 
-1.First run as it is 
-2.Secondly uncomment the above lines and comment the below 3 input lines
 
-It should cover both cases
+I covered all mines of code with different inputs and tested Coverage using EclEmma Eclipse plugin.
 
 Please let me know if there is any scope for improvement in my code. I guess keeping track of every cent after rounding up to decimal places is the important part in this test .I took care of this by taking some random values and figured out the logic.
 
